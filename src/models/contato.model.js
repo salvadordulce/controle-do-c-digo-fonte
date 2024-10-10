@@ -1,16 +1,17 @@
-let contato = [];
+const pool = require("../config/database"); // Importanto conexão do banco de dados
 
 // Função que retorna todos os contatos
-function listarContatos() {
-    return contato;
+async function listarContatos() {
+    const buscarContatos = await pool.query('SELECT * FROM contatos');
+
+    return buscarContatos[0];
 };
 
 // Função que cria um novo contato
-function criarContato(nome, telefone) {
-    const novocontato = { id: contato.length + 1, nome, telefone };
-    contato.push(novocontato);
+async function criarContato(nome, telefone) {
+    const novocontato = await pool.query(`INSERT INTO contatos (nome, telefone) VALUES ('${nome}','${telefone}')`);
 
-    return novocontato;
+    return novocontato[0];
 };
 
 

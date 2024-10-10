@@ -1,11 +1,11 @@
 const contatoModel = require("../models/contato.model");
 
-function getContatos(req, res) {
-    const contatos = contatoModel.listarContatos();
+async function getContatos(req, res) {
+    const contatos = await contatoModel.listarContatos();
     res.json(contatos);
 }
 
-function criarContato(req, res) {
+async function criarContato(req, res) {
     const { nome, telefone } = req.body;
 
     if (!nome) {
@@ -14,10 +14,15 @@ function criarContato(req, res) {
         return res.status(400).json({ message: 'Telefone é obrigátorio' });
     }
 
-    const novocontato = contatoModel.criarContato(nome, telefone);
-    res.status(201).json(novocontato);
-}
+    const novocontato = await contatoModel.criarContato(nome, telefone);
 
+    if (novocontato) {
+        return res.status(201).json({ message: 'Contato criado com sucesso!' })
+    } else {
+        return res.status(500).json({ message: 'ERROR' })
+    }
+
+}
 
 module.exports = {
     getContatos,

@@ -1,20 +1,21 @@
-let items = [];  // Cria uma lista vazia para armazenar os itens (simulando um banco de dados)
+const pool = require("../config/database"); // Importanto conexão do banco de dados
 
 // Função que retorna todos os itens armazenados
-function listItems() {
-  return items;  // Retorna a lista de itens
+async function listItems() {
+  const buscarItems = await pool.query('SELECT * FROM items');
+
+  return buscarItems[0];
 };
 
 // Função que cria um novo item e o adiciona à lista
-function createItem(name) {
-  const newItem = { id: items.length + 1, name };  // Cria um novo item com ID incremental e o nome fornecido
-  items.push(newItem);  // Adiciona o novo item à lista
+async function createItem(name) {
+  const newItem = await pool.query(`INSERT INTO items (name) VALUES ('${name}')`)
 
-  return newItem;  // Retorna o item recém-criado
+  return newItem[0];
 };
 
 
 module.exports = {
   listItems,
-  createItem,
+  createItem
 }
