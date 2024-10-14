@@ -1,17 +1,24 @@
 const pool = require("../config/database"); // Importanto conexão do banco de dados
+const { PrismaClient } = require("@prisma/client");
+const prisma = new PrismaClient();
 
 // Função que retorna todos os contatos
 async function listarContatos() {
-    const buscarContatos = await pool.query('SELECT * FROM contatos');
+    const buscarContatos = await prisma.contatos.findMany();
 
-    return buscarContatos[0];
+    return buscarContatos;
 };
 
 // Função que cria um novo contato
 async function criarContato(nome, telefone) {
-    const novocontato = await pool.query(`INSERT INTO contatos (nome, telefone) VALUES ('${nome}','${telefone}')`);
+    const novocontato = await prisma.contatos.create({
+        data: {
+          nome: nome,
+          telefone: telefone
+        }
+      });
 
-    return novocontato[0];
+    return novocontato;
 };
 
 
